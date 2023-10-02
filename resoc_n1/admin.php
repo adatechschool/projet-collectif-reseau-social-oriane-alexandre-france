@@ -31,7 +31,8 @@
          * Etape 1: Ouvrir une connexion avec la base de donnée.
          */
         // importation des variables déclarées dans le fichier variables.php :
-        // $mysqli = new mysqli("localhost", "root", "root", "socialnetwork");
+        //  - $mysqli = new mysqli("localhost", "root", "root", "socialnetwork");
+        //  - $lesInformations = $mysqli->query($laQuestionEnSql);
         include 'variables.php';
 
         // on va en avoir besoin pour la suite
@@ -48,9 +49,10 @@
                 <?php
                 /*
                  * Etape 2 : trouver tous les mots clés
+                 * 
                  */
                 $laQuestionEnSql = "SELECT * FROM `tags` LIMIT 50";
-                $lesInformations = $mysqli->query($laQuestionEnSql);
+                // déclaration de la variable $lesInformations ici initialement
                 // Vérification
                 if ( ! $lesInformations)
                 {
