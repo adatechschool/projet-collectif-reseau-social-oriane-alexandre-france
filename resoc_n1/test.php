@@ -97,15 +97,13 @@
                  * Etape 5 : @todo : Afficher les utilisatrices en s'inspirant de ce qui a été fait dans news.php
                  * Attention à en pas oublier de modifier dans le lien les "user_id=123" avec l'id de l'utilisatrice
                  */
-                $user_id = $_GET['id'];
                 while ($tag = $lesInformations->fetch_assoc())
                 {
-                    echo "<pre>" . print_r($tag, 1) . "</pre>";
-                    // $check= <?php echo $tag['id']
+                    // echo "<pre>" . print_r($tag, 1) . "</pre>";
                     ?>
 
                     <article>
-                        <h3><?php echo $tag['alias'] ?></h3>
+                        <h3><a href="wall.php?user_id=<?php echo $tag['id']; ?>"><?php echo $tag['alias'] ?></a></h3>
                         <p><?php echo $tag['id'] ?></p>
                         <nav>
                             <a href="wall.php?user_id=<?php echo $tag['id']; ?>">Mur</a>

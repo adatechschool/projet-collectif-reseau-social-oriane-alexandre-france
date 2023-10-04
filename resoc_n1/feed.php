@@ -36,7 +36,6 @@
              * Etape 1: Le mur concerne un utilisateur en particulier
              */
             include 'variables.php';
-            $userId = intval($_GET['user_id']);
             ?>
 
             <aside>
@@ -48,13 +47,13 @@
                 $lesInformations = $mysqli->query($laQuestionEnSql);
                 $user = $lesInformations->fetch_assoc();
                 //@todo: afficher le résultat de la ligne ci dessous, remplacer XXX par l'alias et effacer la ligne ci-dessous
-                echo "<pre>" . print_r($user, 1) . "</pre>";
+                // echo "<pre>" . print_r($user, 1) . "</pre>";
                 ?>
                 <img src="user.jpg" alt="Portrait de l'utilisatrice"/>
                 <section>
                     <h3>Présentation</h3>
                     <p>Sur cette page vous trouverez tous les message des utilisatrices
-                        auxquel est abonnée l'utilisatrice XXX
+                        auxquel est abonnée l'utilisatrice <a href="wall.php?user_id=<?php echo $user['id']; ?>"><?php echo $user['alias']; ?></a>
                         (n° <?php echo $userId ?>)
                     </p>
 
@@ -100,7 +99,7 @@
                     <h3>
                         <time datetime='2020-02-01 11:12:13' ><?php echo $post['created']; ?></time>
                     </h3>
-                    <address>par <?php echo $post['author_name']; ?></address>
+                    <address>par <a href="wall.php?user_id=<?php echo $userId; ?>"><?php echo $post['author_name']; ?></a></address>
                     <div>
                         <p><?php echo $post['content']; ?></p>
                     </div>                                            

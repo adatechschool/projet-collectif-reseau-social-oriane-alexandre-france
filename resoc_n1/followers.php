@@ -41,7 +41,6 @@
                 // Etape 2: se connecter à la base de donnée
                 include 'variables.php';
                 // Etape 1: récupérer l'id de l'utilisateur
-                $userId = intval($_GET['user_id']);
                 
                 // Etape 3: récupérer le nom de l'utilisateur
                 $laQuestionEnSql = "
@@ -59,7 +58,7 @@
                 ?>
                 <article>
                     <img src="user.jpg" alt="blason"/>
-                    <h3><?php echo $user['alias']; ?></h3>
+                    <h3><a href="wall.php?user_id=<?php echo $user['id']; ?>"><?php echo $user['alias']; ?></a></h3>
                     <p><?php echo $user['id']; ?></p>
                 </article>
                 <?php

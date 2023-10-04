@@ -92,13 +92,13 @@
                 while ($post = $lesInformations->fetch_assoc())
                 {
 
-                    // echo "<pre>" . print_r($post, 1) . "</pre>";
+                    echo "<pre>" . print_r($post, 1) . "</pre>";
                     ?>                
                     <article>
                         <h3>
                             <time datetime='2020-02-01 11:12:13' ><?php echo $post['created']; ?></time>
                         </h3>
-                        <address>par <?php echo $post['author_name']; ?></address>
+                        <address>par <a href="wall.php?author_name=<?php echo $post['author_name']; ?>"><?php echo $post['author_name']; ?></a></address>
                         <div>
                             <p><?php echo $post['content']; ?></p>
                         </div>                                            

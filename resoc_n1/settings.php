@@ -46,8 +46,6 @@
                  * Documentation : https://www.php.net/manual/fr/reserved.variables.get.php
                  * ... mais en résumé c'est une manière de passer des informations à la page en ajoutant des choses dans l'url
                  */
-                
-                $userId = intval($_GET['user_id']);
 
                 /**
                  * Etape 2: se connecter à la base de donnée
@@ -88,7 +86,7 @@
                     <h3>Mes paramètres</h3>
                     <dl>
                         <dt>Pseudo</dt>
-                        <dd><?php echo $user['alias'] ?></dd>
+                        <dd><a href="wall.php?user_id=<?php echo $user['id']; ?>"><?php echo $user['alias'] ?></a></dd>
                         <dt>Email</dt>
                         <dd><?php echo $user['email'] ?></dd>
                         <dt>Nombre de message</dt>

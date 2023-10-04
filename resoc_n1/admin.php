@@ -98,12 +98,13 @@
              */
             $user_id = $_GET['id'];
             while ($tag = $lesInformations->fetch_assoc()) {
-                echo "<pre>" . print_r($tag, 1) . "</pre>";
+                // echo "<pre>" . print_r($tag, 1) . "</pre>";
                 ?>
 
                 <article>
                     <h3>
-                        <?php echo $tag['alias'] ?>
+                        <!-- la balise a ci-dessous permet de mettre un lien dirigeant vers le mur de l'utilisatrice -->
+                        <a href="wall.php?user_id=<?php echo $tag['id']; ?>"><?php echo $tag['alias'] ?></a>
                     </h3>
                     <p>
                         <?php echo $tag['id'] ?>
