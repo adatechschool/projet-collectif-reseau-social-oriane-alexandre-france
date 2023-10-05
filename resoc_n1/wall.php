@@ -1,3 +1,6 @@
+<?php 
+session_start();
+?>
 <!doctype html>
 <html lang="fr">
     <head>
@@ -58,13 +61,23 @@
                 </section>
             </aside>
             <main>
+                                    
+                <form action="wall.php?user_id=<?php echo $user['id']; ?>" method="post">
+                    <dl>
+                        <dt><label for="auteur">Auteur</label></dt>
+                        <dd>Auteur connecté</dd>
+                        <dt><label for="post">Nouveau post</label></dt>
+                        <dd><textarea name="post" cols="30" rows="10"></textarea></dd>
+                    </dl>
+                    <input type="submit">
+                </form>
                 <?php
                 /**
                  * Etape 3: récupérer tous les messages de l'utilisatrice
                  */
                 $laQuestionEnSql = "
                     SELECT posts.content, posts.created, users.alias as author_name, 
-                    COUNT(likes.id) as like_number, GROUP_CONCAT(DISTINCT tags.label) AS taglist 
+                    count(likes.id) as like_number, GROUP_CONCAT(DISTINCT tags.label) AS taglist 
                     FROM posts
                     JOIN users ON  users.id=posts.user_id
                     LEFT JOIN posts_tags ON posts.id = posts_tags.post_id  
@@ -87,7 +100,8 @@
                 {
 
                     // echo "<pre>" . print_r($post, 1) . "</pre>";
-                    ?>                
+                    ?>
+
                     <article>
                         <h3>
                             <time datetime='2020-02-01 11:12:13' > <?php echo $post['created']; ?></time>

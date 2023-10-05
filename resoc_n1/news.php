@@ -84,7 +84,7 @@
                     SELECT posts.content,
                     posts.created,
                     users.alias as author_name,
-                    COUNT(likes.id) as like_number,
+                    count(likes.id) as like_number,
                     GROUP_CONCAT(DISTINCT tags.label) AS taglist
                     FROM posts
                     JOIN users ON  users.id=posts.user_id
