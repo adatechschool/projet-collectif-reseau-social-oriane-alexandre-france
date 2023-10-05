@@ -1,11 +1,11 @@
-<?php 
+<?php
 session_start();
 ?>
 <!doctype html>
 <html lang="fr">
     <head>
         <meta charset="utf-8">
-        <title>ReSoC - Mur</title> 
+        <title>ReSoC - Mur</title>
         <meta name="author" content="Julien Falconnet">
         <link rel="stylesheet" href="style.css"/>
     </head>
@@ -45,7 +45,7 @@ session_start();
                 <?php
                 /**
                  * Etape 3: récupérer le nom de l'utilisateur
-                 */                
+                 */
                 $laQuestionEnSql = "SELECT * FROM users WHERE id= '$userId' ";
                 $lesInformations = $mysqli->query($laQuestionEnSql);
                 $user = $lesInformations->fetch_assoc();
@@ -61,31 +61,77 @@ session_start();
                 </section>
             </aside>
             <main>
-                                    
-                <form action="wall.php?user_id=<?php echo $user['id']; ?>" method="post">
-                    <dl>
-                        <dt><label for="auteur">Auteur</label></dt>
-                        <dd>Auteur connecté</dd>
-                        <dt><label for="post">Nouveau post</label></dt>
-                        <dd><textarea name="post" cols="30" rows="10"></textarea></dd>
-                    </dl>
-                    <input type="submit">
-                </form>
+               <?php
+               // Etape 1 : vérifier si on est en train d'afficher ou de traiter le formulaire
+                //     // si on recoit un champs email rempli il y a une chance que ce soit un traitement
+                $enCoursDeTraitement = isset($_POST['post']);
+                if($enCoursDeTraitement) {
+                  // on ne fait ce qui suit que si un formulaire a été soumis.
+                  // Etape 2: récupérer ce qu'il y a dans le formulaire @todo: c'est là que votre travaille se situe
+                  // observez le résultat de cette ligne de débug (vous l'effacerez ensuite)
+                  $authorId = $_POST['id'];
+                  $postContent = $_POST['post'];
+
+                //Etape 3 : Petite sécurité
+                // pour éviter les injection sql : https://www.w3schools.com/sql/sql_injection.asp
+                  $authorId = intval($mysqli->real_escape_string($authorId));
+                  $postContent = $mysqli->real_escape_string($postContent);
+
+                  //Etape 4 : construction de la requete
+                  $lInstructionSql = "INSERT INTO posts (id, user_id, content, created, parent_id) "
+                                . "VALUES (NULL, "
+                                . $authorId . ", "
+                                . "'" . $postContent . "', "
+                                . "NOW(), "
+                                . "NULL);"
+                                ;
+                        // echo $lInstructionSql;
+
+                  // Etape 5 : execution
+                  $ok = $mysqli->query($lInstructionSql);
+                  // echo "<pre>" . print_r($ok, 1) . "</pre>";
+                  if ( ! $ok)
+                  {
+                      echo "Impossible d'ajouter le message: " . $mysqli->error;
+                  } else
+                  {
+                      echo "Message posté en tant que :" . $user['alias'];
+                  }
+                }
+
+                if ("wall.php?user_id=" . $user['id'] == "wall.php?user_id=" . $_SESSION['connected_id']) {
+               ?>
+                  <form action="wall.php?user_id=<?php echo $user['id']; ?>" method="post">
+                  <input type='hidden' name='id' value="<?php echo $user['id']; ?>">
+                      <dl>
+                          <dt><label for="auteur">Bonjour <?php echo $user['alias']; ?></label></dt>
+                          <dt><label for="post">Quoi de neuf ?</label></dt>
+                          <dd><textarea name="post" cols="30" rows="10"></textarea></dd>
+                      </dl>
+                      <input type="submit">
+                  </form>
+                <?php } else {
+                    echo "vous ne pouvez pas publier sur ce mur";
+                    echo $_SESSION['connected_id'];
+
+                  }
+                ?>
+
                 <?php
                 /**
                  * Etape 3: récupérer tous les messages de l'utilisatrice
                  */
                 $laQuestionEnSql = "
-                    SELECT posts.content, posts.created, users.alias as author_name, 
-                    count(likes.id) as like_number, GROUP_CONCAT(DISTINCT tags.label) AS taglist 
+                    SELECT posts.content, posts.created, users.alias as author_name,
+                    count(likes.id) as like_number, GROUP_CONCAT(DISTINCT tags.label) AS taglist
                     FROM posts
                     JOIN users ON  users.id=posts.user_id
-                    LEFT JOIN posts_tags ON posts.id = posts_tags.post_id  
-                    LEFT JOIN tags       ON posts_tags.tag_id  = tags.id 
-                    LEFT JOIN likes      ON likes.post_id  = posts.id 
-                    WHERE posts.user_id='$userId' 
+                    LEFT JOIN posts_tags ON posts.id = posts_tags.post_id
+                    LEFT JOIN tags       ON posts_tags.tag_id  = tags.id
+                    LEFT JOIN likes      ON likes.post_id  = posts.id
+                    WHERE posts.user_id='$userId'
                     GROUP BY posts.id
-                    ORDER BY posts.created DESC  
+                    ORDER BY posts.created DESC
                     ";
                 $lesInformations = $mysqli->query($laQuestionEnSql);
                 if ( ! $lesInformations)
@@ -109,15 +155,13 @@ session_start();
                         <address>par <a href="wall.php?user_id=<?php echo $userId; ?>"><?php echo $post['author_name']; ?></a></address>
                         <div>
                             <p><?php echo $post['content']; ?></p>
-                        </div>                                            
+                        </div>
                         <footer>
                             <small>♥ <?php echo $post['like_number']; ?></small>
                             <a href="">#<?php echo $post['taglist']; ?></a>
                         </footer>
                     </article>
                 <?php } ?>
-
-
             </main>
         </div>
     </body>

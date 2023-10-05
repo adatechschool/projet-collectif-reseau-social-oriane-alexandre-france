@@ -10,7 +10,7 @@ if (!isset($_SESSION['count'])) {
 <html lang="fr">
     <head>
         <meta charset="utf-8">
-        <title>ReSoC - Connexion</title> 
+        <title>ReSoC - Connexion</title>
         <meta name="author" content="Julien Falconnet">
         <link rel="stylesheet" href="style.css"/>
     </head>
@@ -82,16 +82,17 @@ if (!isset($_SESSION['count'])) {
                         if ( ! $user OR $user["password"] != $passwdAVerifier)
                         {
                             echo "La connexion a échouée. ";
-                            
+
                         } else
                         {
                             echo "Votre connexion est un succès : " . $user['alias'] . ".";
                             // Etape 7 : Se souvenir que l'utilisateur s'est connecté pour la suite
                             // documentation: https://www.php.net/manual/fr/session.examples.basic.php
                             $_SESSION['connected_id']=$user['id'];
+                            echo $_SESSION['connected_id'];
                         }
                     }
-                    ?>                     
+                    ?>
                     <form action="login.php" method="post">
                         <input type='hidden'name='???' value='achanger'>
                         <dl>
