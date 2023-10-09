@@ -55,6 +55,49 @@ session_start();
                 <img src="user.jpg" alt="Portrait de l'utilisatrice"/>
                 <section>
                     <h3>Présentation</h3>
+                    <?php
+               // Etape 1 : vérifier si on est en train d'afficher ou de traiter le formulaire
+                //     // si on recoit un champs email rempli il y a une chance que ce soit un traitement
+                $verification = isset($_POST['abonnement']);
+                if($verification) {
+                  // on ne fait ce qui suit que si un formulaire a été soumis.
+                  // Etape 2: récupérer ce qu'il y a dans le formulaire @todo: c'est là que votre travaille se situe
+                  // observez le résultat de cette ligne de débug (vous l'effacerez ensuite)
+                  $followerId = $_SESSION['connected_id'];
+                //   $followingId = $user['id'];
+
+                //Etape 3 : Petite sécurité
+                // pour éviter les injection sql : https://www.w3schools.com/sql/sql_injection.asp
+                //   $authorId = intval($mysqli->real_escape_string($authorId));
+                //   $postContent = $mysqli->real_escape_string($postContent);
+
+                  //Etape 4 : construction de la requete
+                  $lInstructionSql = "INSERT INTO followers (id, followed_user_id, following_user_id) "
+                                . "VALUES (NULL, " . $followerId . ", " . "'" . $userId . "');"
+                                ;
+                        // echo $lInstructionSql;
+
+                  // Etape 5 : execution
+                  $ok = $mysqli->query($lInstructionSql);
+                  // echo "<pre>" . print_r($ok, 1) . "</pre>";
+                  if ( ! $ok)
+                  {
+                      echo "Impossible de s'abonner" . $mysqli->error;
+                  } else
+                  {
+                      echo "Vous êtes bien abonné à " . $user['alias'];
+                  }
+                }
+
+                if (!("wall.php?user_id=" . $user['id'] == "wall.php?user_id=" . $_SESSION['connected_id'])) {
+                ?>  <form action="wall.php?user_id=<?php echo $user['id']; ?>" method="post">
+                    <input type="submit" name="abonnement" class="button" value="S'abonner">
+                    <!-- <input type="submit" name="désabonnement" class="button" value="Se désabonner" > -->
+                </form>
+                <?php 
+                    // if("wall.php?user_id=" . $user['id'] == "wall.php?user_id=")
+                }
+                ?>
                     <p>Sur cette page vous trouverez tous les message de l'utilisatrice : <?php echo $user['alias']; ?>
                         (n° <?php echo $userId ?>)
                     </p>
