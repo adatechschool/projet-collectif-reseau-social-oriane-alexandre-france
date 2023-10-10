@@ -55,71 +55,55 @@ session_start();
                 <img src="user.jpg" alt="Portrait de l'utilisatrice"/>
                 <section>
                     <h3>Présentation</h3>
-                    <?php
-               // Etape 1 : vérifier si on est en train d'afficher ou de traiter le formulaire
-                //     // si on recoit un champs email rempli il y a une chance que ce soit un traitement
-                $verification = isset($_POST['abonnement']);
-                // $check = isset($_POST['désabonnement']);
-                if($verification) {
-                  // on ne fait ce qui suit que si un formulaire a été soumis.
-                  // Etape 2: récupérer ce qu'il y a dans le formulaire @todo: c'est là que votre travaille se situe
-                  // observez le résultat de cette ligne de débug (vous l'effacerez ensuite)
-                  $followerId = $_SESSION['connected_id'];
-                //   $followingId = $user['id'];
+                
+                <!-- AFFICHER LE BON FORMULAIRE -->
+                <?php
+                $followerId = $_SESSION['connected_id'];
+                
+                if (!("wall.php?user_id=" . $userId == "wall.php?user_id=" . $followerId)) {
+                    //construction de la requête pour savoir si l'abonnement existe déjà dans la table followers
+                    $sqlAbonnementExist = "SELECT * FROM followers WHERE `followed_user_id`= $followerId AND `following_user_id`= $userId";
+                    //execution de la requête SQLAbonnementExist
+                    $appelAbonnementExist = $mysqli->query($sqlAbonnementExist);
+                    $result = $appelAbonnementExist->fetch_assoc();
 
-                //Etape 3 : Petite sécurité
-                // pour éviter les injection sql : https://www.w3schools.com/sql/sql_injection.asp
-                //   $authorId = intval($mysqli->real_escape_string($authorId));
-                //   $postContent = $mysqli->real_escape_string($postContent);
-
-                  //Etape 4 : construction de la requete
-                  $lInstructionSql = "INSERT INTO followers (id, followed_user_id, following_user_id) "
-                                . "VALUES (NULL, " . $followerId . ", " . "'" . $userId . "');"
-                                ;
-                // echo $lInstructionSql;
-
-                $SQLFollowers = "SELECT * FROM followers WHERE `followed_user_id`= $followerId AND `following_user_id`= $userId";
-                $Appel = $mysqli->query($SQLFollowers);
-
-                $SQLDelete = "DELETE FROM `followers` WHERE `followed_user_id`= $followerId AND `following_user_id`= $userId";
-                $AppelDelete = $mysqli->query($SQLDelete);
-
-                  // Etape 5 : execution
-                  $ok = $mysqli->query($lInstructionSql);
-                  // echo "<pre>" . print_r($ok, 1) . "</pre>";
-                  if ( ! $ok)
-                  {
-                      echo "Impossible de s'abonner" . $mysqli->error;
-                  } else
-                  {
-                      echo "Vous êtes bien abonné à " . $user['alias'];
-                      echo $_SESSION['connected_id'];
-                      echo $userId;
-                  }
-                }
-                if (!("wall.php?user_id=" . $userId == "wall.php?user_id=" . $_SESSION['connected_id'])) {
-                ?> 
-                <?php 
-                    if (($Appel)) {
-                        
-
+                    if ($result) {
                 ?>
-                        <form action="wall.php?user_id=<?php echo $user['id']; ?>" method="post">
+                        <form method="post">
                         <input type="submit" name="désabonnement" class="button" value="Se désabonner" >
                         </form>
-                        
-                    
                 <?php
-                echo "<pre>"  . print_r($AppelDelete,1) . "</pre>";
                     } else {
                 ?>
-                        <form action="wall.php?user_id=<?php echo $user['id']; ?>" method="post">
+                        <form method="post">
                         <input type="submit" name="abonnement" class="button" value="S'abonner">
                         </form>
                 <?php
                     }
+                } else {
+                    echo "Bienvenue Michel";
                 }
                 ?>
+
+                <!-- CREATION DE L'ABONNEMENT -->
+                <?php
+                $verificationClickAbonnement = isset($_POST['abonnement']);
+
+                if ($verificationClickAbonnement) {
+                    //construction de la requête pour insérer une nouvelle ligne dans la table followers
+                    $insertRowInFollowers = "INSERT INTO followers (id, followed_user_id, following_user_id) "
+                    . "VALUES (NULL, " . $followerId . ", " . "'" . $userId . "');"
+                    ;
+                    //execution de la requête
+                    $checkRowInsert = $mysqli->query($insertRowInFollowers);
+                    if ($checkRowInsert) {
+                        echo "Vous êtes abonné à " . $user['alias'];
+                    } else {
+                        echo "Impossible de s'abonner à " . $user['alias'];
+                    }
+                }
+                ?>
+               
                     <p>Sur cette page vous trouverez tous les message de l'utilisatrice : <?php echo $user['alias']; ?>
                         (n° <?php echo $userId ?>)
                     </p>
