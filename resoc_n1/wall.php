@@ -55,7 +55,7 @@ session_start();
                 <img src="user.jpg" alt="Portrait de l'utilisatrice"/>
                 <section>
                     <h3>Présentation</h3>
-                
+
                 <!-- CREATION DE L'ABONNEMENT -->
                 <?php
                 $followerId = $_SESSION['connected_id'];
@@ -76,9 +76,28 @@ session_start();
                 }
                 ?>
 
+                <!-- CREATION DU DESABONNEMENT -->
+
+                <?php
+
+                $verificationClickDesabonnement = isset($_POST['désabonnement']);
+
+                if ($verificationClickDesabonnement) {
+                    //construction de la requête pour supprimer une ligne d'abonnement dans la table Followers
+                    $sqlDeleteRow = "DELETE FROM followers WHERE `followed_user_id`= $followerId AND `following_user_id`= $userId";
+                    //execution de la requête
+                    $checkDeleteRow = $mysqli->query($sqlDeleteRow);
+                    if ($checkDeleteRow) {
+                        echo "Vous êtes désabonné de " . $user['alias'];
+                    } else {
+                        echo "Impossible de se désabonner de " . $user['alias'];
+                    }
+                }
+                ?>
+
                 <!-- AFFICHER LE BON FORMULAIRE -->
                 <?php
-                
+
                 if (!("wall.php?user_id=" . $userId == "wall.php?user_id=" . $followerId)) {
                     //construction de la requête pour savoir si l'abonnement existe déjà dans la table followers
                     $sqlAbonnementExist = "SELECT * FROM followers WHERE `followed_user_id`= $followerId AND `following_user_id`= $userId";
@@ -104,7 +123,7 @@ session_start();
                 }
                 ?>
 
-               
+
                     <p>Sur cette page vous trouverez tous les message de l'utilisatrice : <?php echo $user['alias']; ?>
                         (n° <?php echo $userId ?>)
                     </p>
