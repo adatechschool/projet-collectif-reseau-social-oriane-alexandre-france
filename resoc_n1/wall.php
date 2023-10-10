@@ -226,7 +226,7 @@ session_start();
                             <p><?php echo $post['content']; ?></p>
                         </div>
                         <footer>
-                            <small>♥ <?php echo $post['like_number']; ?></small>
+                            <small>♥ <?php echo $post['like_number']; ?> <button type="submit" name="like">J'aime</button> <button type="submit" name="dislike">J'aime pas</button></small>
                             <a href="">#<?php echo $post['taglist']; ?></a>
                         </footer>
                     </article>

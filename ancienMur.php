@@ -136,7 +136,7 @@ Envoyer un message France Huon, Oriane Da Silva
                   <!-- CREATION DE L'ABONNEMENT -->
                 <?php
                 $verificationClickLikes = isset($_POST['like']);
-                $postId = 
+                $postId = Select
 
                 if ($verificationClickLike) {
                     //construction de la requête pour insérer une nouvelle ligne dans la table likes
