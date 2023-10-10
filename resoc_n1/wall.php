@@ -56,9 +56,28 @@ session_start();
                 <section>
                     <h3>Présentation</h3>
                 
-                <!-- AFFICHER LE BON FORMULAIRE -->
+                <!-- CREATION DE L'ABONNEMENT -->
                 <?php
                 $followerId = $_SESSION['connected_id'];
+                $verificationClickAbonnement = isset($_POST['abonnement']);
+
+                if ($verificationClickAbonnement) {
+                    //construction de la requête pour insérer une nouvelle ligne dans la table followers
+                    $insertRowInFollowers = "INSERT INTO followers (id, followed_user_id, following_user_id) "
+                    . "VALUES (NULL, " . $followerId . ", " . "'" . $userId . "');"
+                    ;
+                    //execution de la requête
+                    $checkRowInsert = $mysqli->query($insertRowInFollowers);
+                    if ($checkRowInsert) {
+                        echo "Vous êtes abonné à " . $user['alias'];
+                    } else {
+                        echo "Impossible de s'abonner à " . $user['alias'];
+                    }
+                }
+                ?>
+
+                <!-- AFFICHER LE BON FORMULAIRE -->
+                <?php
                 
                 if (!("wall.php?user_id=" . $userId == "wall.php?user_id=" . $followerId)) {
                     //construction de la requête pour savoir si l'abonnement existe déjà dans la table followers
@@ -85,24 +104,6 @@ session_start();
                 }
                 ?>
 
-                <!-- CREATION DE L'ABONNEMENT -->
-                <?php
-                $verificationClickAbonnement = isset($_POST['abonnement']);
-
-                if ($verificationClickAbonnement) {
-                    //construction de la requête pour insérer une nouvelle ligne dans la table followers
-                    $insertRowInFollowers = "INSERT INTO followers (id, followed_user_id, following_user_id) "
-                    . "VALUES (NULL, " . $followerId . ", " . "'" . $userId . "');"
-                    ;
-                    //execution de la requête
-                    $checkRowInsert = $mysqli->query($insertRowInFollowers);
-                    if ($checkRowInsert) {
-                        echo "Vous êtes abonné à " . $user['alias'];
-                    } else {
-                        echo "Impossible de s'abonner à " . $user['alias'];
-                    }
-                }
-                ?>
                
                     <p>Sur cette page vous trouverez tous les message de l'utilisatrice : <?php echo $user['alias']; ?>
                         (n° <?php echo $userId ?>)
