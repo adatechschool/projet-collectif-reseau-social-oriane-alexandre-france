@@ -207,23 +207,6 @@ session_start();
                 {
                     echo("Échec de la requete : " . $mysqli->error);
                 }
-
-                // CREATION DU LIKE
-                
-                $verificationClickLike = isset($_POST['like']);
-
-                if($verificationClickLike) {
-                    $insertRowInLikes = "INSERT INTO likes (id, user_id, post_id)"
-                    . "VALUES (NULL, " . $followerId . ", " . "'" . $likedPostId . "');"
-                    ;
-                    $checkDeleteRowInLikes = $mysqli->query($deleteRowInLikes);
-
-                    if($checkDeleteRowInLikes){
-                        echo "Vous n'aimez plus";
-                    } else {
-                        echo "Vous aimez toujours";
-                    }
-                }
                 /**
                  * Etape 4: @todo Parcourir les messsages et remplir correctement le HTML avec les bonnes valeurs php
                  */
@@ -242,11 +225,7 @@ session_start();
                             <p><?php echo $post['content']; ?></p>
                         </div>
                         <footer>
-                            <small>♥ <?php echo $post['like_number']; ?>
-                                <form method='post'>
-                                    <input type="submit" name="like" value="J'aime" >
-                                </form>
-                            </small>
+                            <small>♥ <?php echo $post['like_number']; ?></small>
                             <a href="">#<?php echo $post['taglist']; ?></a>
                         </footer>
                     </article>
